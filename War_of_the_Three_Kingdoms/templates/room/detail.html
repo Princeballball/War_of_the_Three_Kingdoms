@@ -1,0 +1,60 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>三國殺 | {{ room.name }}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main class="lobby-shell">
+        <nav class="top-nav" aria-label="遊戲導覽列">
+            <a class="brand" href="{% url 'home' %}">
+                <span class="brand-seal">戰</span>
+                <span>
+                    <strong>三國殺</strong>
+                    <small>War of the Three Kingdoms</small>
+                </span>
+            </a>
+            <div class="account-area">
+                <span class="player-badge">玩家：{{ request.user.username }}</span>
+                <a href="{% url 'home' %}">回大廳</a>
+            </div>
+        </nav>
+
+        {% if messages %}
+            <div class="game-message" role="status" aria-live="polite">
+                {% for message in messages %}<span>{{ message }}</span>{% endfor %}
+            </div>
+        {% endif %}
+
+        <section class="room-hero">
+            <div>
+                <p class="eyebrow">{{ room.get_room_type_display }} · {{ room.get_status_display }}</p>
+                <h1>{{ room.name }}</h1>
+                <p>房號：<strong>{{ room.code }}</strong> · {{ room.player_count }} / 5 玩家</p>
+            </div>
+            <form method="post" action="{% url 'room:leave' room.code %}">
+                {% csrf_token %}
+                <button type="submit">離開房間</button>
+            </form>
+        </section>
+
+        <section class="seat-grid" aria-label="房間座位">
+            {% for seat in seats %}
+                <article class="seat-card{% if seat %} occupied{% endif %}">
+                    <span>座位 {{ forloop.counter }}</span>
+                    {% if seat %}
+                        <strong>{{ seat.user.username }}</strong>
+                        <small>已加入</small>
+                    {% else %}
+                        <strong>等待玩家</strong>
+                        <small>空位</small>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>

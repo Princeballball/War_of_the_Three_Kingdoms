@@ -50,9 +50,9 @@
                 <div class="nav-item">
                     <button type="button">牌庫 <span>⌄</span></button>
                     <div class="mega-menu compact">
+                        <a href="{% url 'card:library' %}"><strong>全部卡片</strong><span>查看資料庫內所有武將牌圖。</span></a>
                         <a href="{% url 'rules' %}#turn"><strong>出牌流程</strong><span>摸牌、出牌、棄牌的時機。</span></a>
                         <a href="{% url 'rules' %}#cards"><strong>常見卡牌</strong><span>殺、閃、桃與錦囊牌。</span></a>
-                        <a href="{% url 'rules' %}#distance"><strong>距離與裝備</strong><span>武器、坐騎與攻擊範圍。</span></a>
                     </div>
                 </div>
             </div>
@@ -96,31 +96,65 @@
                     <div>
                         <p class="eyebrow">Quick Match</p>
                         <h2>快速開始</h2>
-                        <p>系統會替你尋找缺人的標準身份局。</p>
+                        <p>系統會替你尋找缺人的公開房，湊齊 5 人自動開局。</p>
                     </div>
-                    <button id="startGameButton" type="button">開始配對</button>
+                    <form method="post" action="{% url 'room:auto_match' %}">
+                        {% csrf_token %}
+                        <button id="startGameButton" type="submit">開始配對</button>
+                    </form>
                     <p id="gameStatus">目前狀態：在大廳待命。</p>
                 </article>
 
                 <article class="stats-panel">
-                    <h2>玩家資料</h2>
-                    <div class="stat-list">
-                        <span><strong>1</strong> 等級</span>
-                        <span><strong>0</strong> 勝場</span>
-                        <span><strong>0</strong> 金幣</span>
-                    </div>
+                    <h2>加入私人房</h2>
+                    <form class="room-form" method="post" action="{% url 'room:join_private' %}">
+                        {% csrf_token %}
+                        {{ private_join_form.code }}
+                        <button type="submit">用房號加入</button>
+                    </form>
                 </article>
 
                 <article class="room-panel" id="rooms">
                     <div class="section-head">
                         <h2>房間列表</h2>
-                        <button type="button">建立房間</button>
+                        <span>公開房可直接加入</span>
                     </div>
                     <div class="room-list">
-                        <button type="button"><span>桃園結義 #001</span><small>2 / 5 玩家 · 標準模式</small></button>
-                        <button type="button"><span>赤壁夜戰 #014</span><small>4 / 8 玩家 · 自訂房</small></button>
-                        <button type="button"><span>洛陽新手場 #032</span><small>1 / 4 玩家 · 新手模式</small></button>
+                        {% for room in public_rooms %}
+                            <form method="post" action="{% url 'room:join_public' room.id %}">
+                                {% csrf_token %}
+                                <button type="submit">
+                                    <span>{{ room.name }} #{{ room.code }}</span>
+                                    <small>{{ room.player_count }} / 5 玩家 · {{ room.get_status_display }}</small>
+                                </button>
+                            </form>
+                        {% empty %}
+                            <p class="empty-state">目前沒有等待中的公開房，可以建立房間或使用快速配對。</p>
+                        {% endfor %}
                     </div>
+                </article>
+
+                <article class="room-panel">
+                    <div class="section-head">
+                        <h2>建立房間</h2>
+                        <span>公開或私人</span>
+                    </div>
+                    <form class="create-room-form" method="post" action="{% url 'room:create' %}">
+                        {% csrf_token %}
+                        <label>
+                            <span>房間名稱</span>
+                            {{ room_form.name }}
+                        </label>
+                        <label>
+                            <span>房間類型</span>
+                            {{ room_form.room_type }}
+                        </label>
+                        <label>
+                            <span>私人房號</span>
+                            {{ room_form.private_code }}
+                        </label>
+                        <button type="submit">建立房間</button>
+                    </form>
                 </article>
 
                 <article class="library-panel" id="generals">
@@ -129,8 +163,9 @@
                 </article>
 
                 <article class="library-panel" id="cards">
-                    <h2>常用卡牌</h2>
-                    <div class="general-row"><span>殺</span><span>閃</span><span>桃</span></div>
+                    <h2>牌庫</h2>
+                    <p>查看目前收錄的武將牌圖片。</p>
+                    <a class="panel-link" href="{% url 'card:library' %}">查看全部卡片</a>
                 </article>
 
                 <article class="library-panel" id="events">

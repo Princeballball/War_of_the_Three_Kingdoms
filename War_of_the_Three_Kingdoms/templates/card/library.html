@@ -1,0 +1,101 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>三國殺 | 牌庫</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main class="lobby-shell">
+        <nav class="top-nav" aria-label="遊戲導覽列">
+            <a class="brand" href="{% url 'home' %}">
+                <span class="brand-seal">戰</span>
+                <span>
+                    <strong>三國殺</strong>
+                    <small>War of the Three Kingdoms</small>
+                </span>
+            </a>
+
+            <div class="nav-menu">
+                <div class="nav-item">
+                    <button type="button">大廳 <span>⌄</span></button>
+                    <div class="mega-menu compact">
+                        <a href="{% url 'home' %}#quick-match"><strong>快速配對</strong><span>立即加入一場標準對局。</span></a>
+                        <a href="{% url 'home' %}#rooms"><strong>房間列表</strong><span>查看等待玩家的房間。</span></a>
+                        <a href="{% url 'rules' %}"><strong>規則教學</strong><span>新手先看這裡，理解身份與回合。</span></a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <button type="button">牌庫 <span>⌃</span></button>
+                    <div class="mega-menu compact">
+                        <a href="{% url 'card:library' %}"><strong>全部卡片</strong><span>查看資料庫內所有武將牌圖。</span></a>
+                        <a href="{% url 'rules' %}#cards"><strong>常見卡牌</strong><span>殺、閃、桃與錦囊牌。</span></a>
+                        <a href="{% url 'rules' %}#distance"><strong>距離與裝備</strong><span>武器、坐騎與攻擊範圍。</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-area">
+                {% if request.user.is_authenticated %}
+                    <span class="player-badge" title="{{ request.user.email }}">玩家：{{ request.user.username }}</span>
+                    <form class="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">登出</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">登入</a>
+                    <a href="{% url 'register' %}">註冊</a>
+                {% endif %}
+            </div>
+        </nav>
+
+        <section class="card-library-hero">
+            <p class="eyebrow">Card Library</p>
+            <h1>牌庫</h1>
+            <p>目前收錄 {{ cards|length }} 張武將牌，可依勢力瀏覽。</p>
+        </section>
+
+        {% regroup cards by faction_label as faction_groups %}
+        <section class="card-library">
+            {% for faction in faction_groups %}
+                <div class="card-faction-group">
+                    <div class="section-head">
+                        <h2>{{ faction.grouper }}</h2>
+                        <span>{{ faction.list|length }} 張</span>
+                    </div>
+                    <div class="card-grid">
+                        {% for card in faction.list %}
+                            <article class="card-tile" tabindex="0" aria-label="{{ card.name }}技能說明">
+                                <img src="{% static card.image_path %}" alt="{{ card.name }}">
+                                <div class="card-caption">
+                                    <strong>{{ card.name }}</strong>
+                                </div>
+                                <div class="card-hover-panel">
+                                    <div class="card-hover-head">
+                                        <strong>{{ card.name }}</strong>
+                                        <span>{{ card.faction_label }} · 體力 {{ card.health }}</span>
+                                    </div>
+                                    <div class="skill-list">
+                                        {% for skill in card.skills %}
+                                            <section>
+                                                <h3>【{{ skill.name }}】</h3>
+                                                <p>{{ skill.description }}</p>
+                                            </section>
+                                        {% empty %}
+                                            <p>尚未登錄技能說明。</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% empty %}
+                <p class="empty-state">目前資料表裡還沒有卡片。</p>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>

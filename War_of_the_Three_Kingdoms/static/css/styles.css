@@ -27,7 +27,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
     font: inherit;
 }
 
@@ -109,7 +110,8 @@ a {
 .account-area a,
 .logout-form button,
 .guest-actions a,
-.section-head button {
+.section-head button,
+.panel-link {
     min-height: 38px;
     display: inline-flex;
     align-items: center;
@@ -127,7 +129,8 @@ a {
 .nav-item:hover > button,
 .nav-item > button:focus-visible,
 .account-area a:hover,
-.logout-form button:hover {
+.logout-form button:hover,
+.panel-link:hover {
     border-color: var(--line);
     background: rgba(255, 255, 255, 0.08);
     color: var(--accent-strong);
@@ -212,6 +215,7 @@ a {
 }
 
 .lobby-hero,
+.room-hero,
 .guest-panel,
 .quick-panel,
 .stats-panel,
@@ -229,6 +233,39 @@ a {
     justify-content: space-between;
     gap: 18px;
     padding: 28px;
+}
+
+.room-hero {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 28px;
+}
+
+.room-hero p:last-child {
+    margin: 10px 0 0;
+    color: var(--muted);
+}
+
+.room-hero strong {
+    color: var(--accent-strong);
+}
+
+.room-hero button {
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid rgba(240, 180, 91, 0.44);
+    border-radius: 8px;
+    background: rgba(240, 180, 91, 0.12);
+    color: var(--accent-strong);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.room-hero button:hover {
+    background: rgba(240, 180, 91, 0.2);
 }
 
 .eyebrow {
@@ -294,7 +331,9 @@ h2 {
 }
 
 .quick-panel button,
-.section-head button {
+.section-head button,
+.room-form button,
+.create-room-form button {
     border: 0;
     border-radius: 8px;
     background: var(--accent);
@@ -304,11 +343,14 @@ h2 {
 }
 
 .quick-panel button {
+    width: 100%;
     min-height: 52px;
 }
 
 .quick-panel button:hover,
-.section-head button:hover {
+.section-head button:hover,
+.room-form button:hover,
+.create-room-form button:hover {
     background: #b62d26;
 }
 
@@ -359,7 +401,12 @@ h2 {
     gap: 10px;
 }
 
+.room-list form {
+    margin: 0;
+}
+
 .room-list button {
+    width: 100%;
     min-height: 64px;
     display: flex;
     align-items: center;
@@ -383,11 +430,243 @@ h2 {
     display: block;
 }
 
+.room-form,
+.create-room-form {
+    margin-top: 16px;
+    display: grid;
+    gap: 12px;
+}
+
+.room-form input,
+.create-room-form input,
+.create-room-form select {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+}
+
+.create-room-form select option {
+    color: #1d1714;
+}
+
+.create-room-form label {
+    display: grid;
+    gap: 7px;
+    color: var(--muted);
+}
+
+.room-form button,
+.create-room-form button {
+    min-height: 46px;
+}
+
+.seat-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.seat-card {
+    min-height: 170px;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 8px;
+    padding: 18px;
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    text-align: center;
+}
+
+.seat-card.occupied {
+    border-style: solid;
+    border-color: rgba(240, 180, 91, 0.5);
+    background: rgba(240, 180, 91, 0.1);
+}
+
+.seat-card span,
+.seat-card small {
+    color: var(--muted);
+}
+
+.seat-card strong {
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--text);
+    font-size: 1.25rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .general-row {
     margin-top: 14px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+}
+
+.panel-link {
+    width: fit-content;
+    margin-top: 14px;
+    border-color: var(--line);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.card-library-hero {
+    margin-top: 18px;
+    padding: 34px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(42, 32, 27, 0.92), rgba(29, 23, 20, 0.78));
+}
+
+.card-library-hero h1 {
+    font-size: clamp(2.4rem, 5vw, 4.8rem);
+}
+
+.card-library-hero p:last-child {
+    max-width: 720px;
+    margin: 12px 0 0;
+    color: var(--muted);
+    line-height: 1.75;
+}
+
+.card-library {
+    margin-top: 18px;
+    display: grid;
+    gap: 18px;
+}
+
+.card-faction-group {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(29, 23, 20, 0.78);
+}
+
+.section-head span {
+    color: var(--accent-strong);
+    font-weight: 800;
+}
+
+.card-grid {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 14px;
+}
+
+.card-tile {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.card-tile:hover,
+.card-tile:focus,
+.card-tile:focus-visible {
+    border-color: rgba(240, 180, 91, 0.72);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
+    transform: translateY(-3px);
+}
+
+.card-tile img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    display: block;
+    object-fit: cover;
+    background: var(--panel-strong);
+}
+
+.card-caption {
+    padding: 12px;
+}
+
+.card-tile strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-hover-panel {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+    background: linear-gradient(180deg, rgba(18, 16, 14, 0.92), rgba(18, 16, 14, 0.98));
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 160ms ease, transform 160ms ease;
+    pointer-events: none;
+}
+
+.card-tile:hover .card-hover-panel,
+.card-tile:focus .card-hover-panel,
+.card-tile:focus-visible .card-hover-panel {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card-hover-head {
+    display: grid;
+    gap: 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+}
+
+.card-hover-head strong {
+    color: var(--accent-strong);
+    font-size: 1.15rem;
+}
+
+.card-hover-head span {
+    color: var(--muted);
+    font-weight: 800;
+}
+
+.skill-list {
+    overflow-y: auto;
+    display: grid;
+    gap: 12px;
+    padding-right: 4px;
+}
+
+.skill-list section {
+    display: grid;
+    gap: 5px;
+}
+
+.skill-list h3,
+.skill-list p {
+    margin: 0;
+}
+
+.skill-list h3 {
+    color: var(--text);
+    font-size: 1rem;
+}
+
+.skill-list p {
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+
+.empty-state {
+    color: var(--muted);
 }
 
 .guest-panel {
@@ -540,6 +819,11 @@ h2 {
         flex-direction: column;
     }
 
+    .room-hero {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
     .player-card {
         width: 100%;
     }
@@ -550,6 +834,10 @@ h2 {
 
     .rules-grid {
         grid-template-columns: 1fr;
+    }
+
+    .seat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .tactic-list {
@@ -594,7 +882,8 @@ h2 {
 
     .stat-list,
     .general-row,
-    .tactic-list {
+    .tactic-list,
+    .seat-grid {
         grid-template-columns: 1fr;
     }
 
