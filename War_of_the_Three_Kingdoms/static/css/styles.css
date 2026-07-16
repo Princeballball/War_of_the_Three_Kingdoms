@@ -1,0 +1,605 @@
+:root {
+    color-scheme: dark;
+    --bg: #12100e;
+    --panel: #1d1714;
+    --panel-strong: #2a201b;
+    --text: #f8ead6;
+    --muted: #bea98d;
+    --accent: #cf342c;
+    --accent-strong: #f0b45b;
+    --line: rgba(248, 234, 214, 0.16);
+    --success: #72b492;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+    background:
+        radial-gradient(circle at 18% 0%, rgba(207, 52, 44, 0.18), transparent 34%),
+        radial-gradient(circle at 92% 8%, rgba(240, 180, 91, 0.12), transparent 30%),
+        var(--bg);
+    color: var(--text);
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.lobby-shell {
+    width: min(1180px, calc(100% - 32px));
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 28px 0 48px;
+}
+
+.top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    min-height: 74px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(18, 16, 14, 0.88);
+    backdrop-filter: blur(14px);
+}
+
+.brand {
+    min-width: 220px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.brand-seal {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), #7f211c);
+    font-weight: 900;
+}
+
+.brand strong,
+.brand small {
+    display: block;
+}
+
+.brand small,
+.eyebrow,
+.lobby-hero p,
+.quick-panel p,
+.library-panel p,
+.player-card span,
+.player-card small,
+.mega-menu span,
+.room-list small {
+    color: var(--muted);
+}
+
+.nav-menu {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-item > button,
+.account-area a,
+.logout-form button,
+.guest-actions a,
+.section-head button {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 13px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--text);
+    background: transparent;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.nav-item:hover > button,
+.nav-item > button:focus-visible,
+.account-area a:hover,
+.logout-form button:hover {
+    border-color: var(--line);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--accent-strong);
+}
+
+.mega-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    width: 520px;
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(21, 19, 17, 0.98);
+    box-shadow: 0 22px 58px rgba(0, 0, 0, 0.44);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 8px);
+    transition: opacity 140ms ease, transform 140ms ease, visibility 140ms ease;
+}
+
+.mega-menu.compact {
+    width: 320px;
+    grid-template-columns: 1fr;
+}
+
+.nav-item:hover .mega-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+}
+
+.mega-menu a,
+.menu-feature {
+    display: grid;
+    gap: 5px;
+    padding: 12px;
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.mega-menu a:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.menu-feature {
+    min-height: 154px;
+    align-content: end;
+    background: linear-gradient(180deg, #242321, #302720);
+}
+
+.account-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.player-badge {
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+.game-message {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border: 1px solid rgba(240, 180, 91, 0.48);
+    border-radius: 8px;
+    background: rgba(240, 180, 91, 0.1);
+    color: var(--accent-strong);
+}
+
+.lobby-hero,
+.guest-panel,
+.quick-panel,
+.stats-panel,
+.room-panel,
+.library-panel {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(29, 23, 20, 0.78);
+}
+
+.lobby-hero {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 28px;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    color: var(--accent-strong);
+    font-size: 0.86rem;
+}
+
+h1,
+h2,
+p {
+    letter-spacing: 0;
+}
+
+h1,
+h2 {
+    margin: 0;
+}
+
+.lobby-hero h1,
+.guest-panel h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+}
+
+.lobby-hero p,
+.guest-panel p {
+    margin: 10px 0 0;
+}
+
+.player-card {
+    width: 260px;
+    display: grid;
+    gap: 8px;
+    padding: 18px;
+    border-radius: 8px;
+    background: var(--panel-strong);
+}
+
+.player-card strong {
+    font-size: 1.45rem;
+}
+
+.lobby-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 16px;
+}
+
+.quick-panel,
+.stats-panel,
+.room-panel,
+.library-panel,
+.guest-panel {
+    padding: 20px;
+}
+
+.quick-panel {
+    min-height: 220px;
+    display: grid;
+    align-content: space-between;
+    gap: 18px;
+}
+
+.quick-panel button,
+.section-head button {
+    border: 0;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff8ec;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.quick-panel button {
+    min-height: 52px;
+}
+
+.quick-panel button:hover,
+.section-head button:hover {
+    background: #b62d26;
+}
+
+#gameStatus {
+    margin: 0;
+    color: var(--muted);
+}
+
+.stat-list {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.stat-list span,
+.general-row span {
+    min-height: 76px;
+    display: grid;
+    place-items: center;
+    gap: 4px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--muted);
+}
+
+.stat-list strong {
+    display: block;
+    color: var(--text);
+    font-size: 1.5rem;
+}
+
+.room-panel {
+    grid-column: 1 / -1;
+}
+
+.section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.room-list {
+    margin-top: 16px;
+    display: grid;
+    gap: 10px;
+}
+
+.room-list button {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+}
+
+.room-list button:hover {
+    border-color: rgba(240, 180, 91, 0.62);
+}
+
+.room-list span,
+.room-list small {
+    display: block;
+}
+
+.general-row {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.guest-panel {
+    width: min(680px, 100%);
+    margin: 80px auto 0;
+    padding: 34px;
+}
+
+.guest-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 10px;
+}
+
+.guest-actions a:first-child {
+    background: var(--accent);
+}
+
+.guest-actions a:last-child {
+    border-color: var(--line);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.rules-hero {
+    margin-top: 18px;
+    padding: 34px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(42, 32, 27, 0.9), rgba(29, 23, 20, 0.76));
+}
+
+.rules-hero h1 {
+    max-width: 780px;
+    font-size: clamp(2.2rem, 5vw, 4.6rem);
+}
+
+.rules-hero p:last-child {
+    max-width: 760px;
+    margin: 14px 0 0;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+.rules-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.rule-card {
+    position: relative;
+    min-height: 280px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(29, 23, 20, 0.82);
+}
+
+.rule-card.wide-card {
+    grid-column: 1 / -1;
+}
+
+.rule-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 32px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(240, 180, 91, 0.42);
+    border-radius: 8px;
+    color: var(--accent-strong);
+    background: rgba(240, 180, 91, 0.08);
+    font-weight: 800;
+}
+
+.rule-card h2 {
+    margin-bottom: 12px;
+    font-size: 1.45rem;
+}
+
+.rule-card p,
+.rule-card li,
+.tactic-list span {
+    color: var(--muted);
+    line-height: 1.75;
+}
+
+.rule-card ul,
+.rule-card ol {
+    margin: 14px 0 0;
+    padding-left: 22px;
+}
+
+.rule-card li + li {
+    margin-top: 7px;
+}
+
+.tactic-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.tactic-list div {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tactic-list strong {
+    color: var(--text);
+}
+
+@media (max-width: 920px) {
+    .top-nav {
+        position: static;
+        flex-wrap: wrap;
+    }
+
+    .brand,
+    .nav-menu,
+    .account-area {
+        width: 100%;
+    }
+
+    .nav-menu {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .mega-menu,
+    .mega-menu.compact {
+        left: 0;
+        width: min(520px, calc(100vw - 48px));
+        transform: translate(0, 8px);
+    }
+
+    .nav-item:hover .mega-menu {
+        transform: translate(0, 0);
+    }
+
+    .lobby-hero {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .player-card {
+        width: 100%;
+    }
+
+    .lobby-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rules-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tactic-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 620px) {
+    .lobby-shell {
+        width: min(100% - 20px, 1180px);
+        padding-top: 10px;
+    }
+
+    .mega-menu,
+    .mega-menu.compact {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-feature {
+        min-height: 110px;
+    }
+
+    .account-area,
+    .guest-actions,
+    .section-head,
+    .room-list button {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .account-area a,
+    .logout-form,
+    .logout-form button,
+    .guest-actions a {
+        width: 100%;
+    }
+
+    .player-badge {
+        max-width: none;
+        text-align: center;
+    }
+
+    .stat-list,
+    .general-row,
+    .tactic-list {
+        grid-template-columns: 1fr;
+    }
+
+    .rules-hero,
+    .rule-card {
+        padding: 22px;
+    }
+}

@@ -1,0 +1,88 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登入 | 三國殺</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body>
+    {% if form.errors %}
+        <aside class="auth-alert" role="alert" data-auth-alert>
+            <button class="auth-alert-close" type="button" data-close-alert aria-label="關閉提示">x</button>
+            <strong>登入失敗</strong>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}：{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </aside>
+    {% endif %}
+
+    <main class="auth-page">
+        <video class="auth-video" autoplay loop muted playsinline aria-hidden="true">
+            <source src="https://videos.pexels.com/video-files/8128311/8128311-uhd_2560_1440_25fps.mp4" type="video/mp4">
+        </video>
+        <div class="auth-scrim" aria-hidden="true"></div>
+
+        <section class="auth-panel" aria-labelledby="login-title">
+            <a class="brand-link" href="{% url 'home' %}">
+                <span class="brand-mark">戰</span>
+                <span>
+                    <strong>三國殺</strong>
+                    <small>War of the Three Kingdoms</small>
+                </span>
+            </a>
+
+            <div class="auth-heading">
+                <p>桃園已開局</p>
+                <h1 id="login-title">登入帳號</h1>
+                <span>回到你的武將席位，繼續下一輪攻防。</span>
+            </div>
+
+            <form class="auth-form" method="post" action="{% url 'login' %}" data-auth-form>
+                {% csrf_token %}
+
+                <label class="field">
+                    <span>電子信箱</span>
+                    <span class="input-shell">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+                        <input type="email" name="email" placeholder="player@example.com" autocomplete="email" value="{{ form.email.value|default:'' }}" required>
+                    </span>
+                </label>
+
+                <label class="field">
+                    <span>密碼</span>
+                    <span class="input-shell">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        <input id="login-password" type="password" name="password" placeholder="輸入密碼" autocomplete="current-password" required>
+                        <button class="ghost-icon" type="button" data-toggle-password="login-password" aria-label="顯示或隱藏密碼">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </span>
+                </label>
+
+                <div class="form-row">
+                    <label class="toggle-line">
+                        <input type="checkbox" name="remember" {% if form.remember.value %}checked{% endif %}>
+                        <span class="toggle-ui" aria-hidden="true"></span>
+                        <span>記住我</span>
+                    </label>
+                    <a href="#">忘記密碼？</a>
+                </div>
+
+                <button class="submit-button" type="submit" data-submitting-text="處理中...">進入戰局</button>
+            </form>
+
+            <p class="switch-auth">還沒有帳號？ <a href="{% url 'register' %}">建立新帳號</a></p>
+        </section>
+    </main>
+    <script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>

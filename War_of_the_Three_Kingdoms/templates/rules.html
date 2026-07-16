@@ -1,0 +1,144 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>遊戲規則 | 三國殺</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main class="lobby-shell">
+        <nav class="top-nav" aria-label="遊戲導覽列">
+            <a class="brand" href="{% url 'home' %}">
+                <span class="brand-seal">戰</span>
+                <span><strong>三國殺</strong><small>War of the Three Kingdoms</small></span>
+            </a>
+            <div class="nav-menu">
+                <div class="nav-item">
+                    <button type="button">規則 <span>⌃</span></button>
+                    <div class="mega-menu compact">
+                        <a href="#setup"><strong>開局配置</strong><span>身份、武將、體力。</span></a>
+                        <a href="#turn"><strong>回合流程</strong><span>六個階段如何運作。</span></a>
+                        <a href="#win"><strong>勝利條件</strong><span>陣營與心理博弈。</span></a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <button type="button">牌局 <span>⌄</span></button>
+                    <div class="mega-menu compact">
+                        <a href="#cards"><strong>手牌與卡牌</strong><span>殺、閃、桃與錦囊。</span></a>
+                        <a href="#distance"><strong>距離控制</strong><span>武器與坐騎改變攻擊範圍。</span></a>
+                        <a href="#death"><strong>瀕死與死亡</strong><span>求桃、擊殺與獎懲。</span></a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <button type="button">戰術 <span>⌄</span></button>
+                    <div class="mega-menu compact">
+                        <a href="#tactics"><strong>賣血流</strong><span>受傷換取牌差或技能收益。</span></a>
+                        <a href="#tactics"><strong>爆發流</strong><span>一回合大量出牌壓制對手。</span></a>
+                        <a href="#tactics"><strong>內奸節奏</strong><span>控制局勢，不讓任一方太快勝利。</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="account-area">
+                <a href="{% url 'home' %}">回大廳</a>
+                {% if request.user.is_authenticated %}
+                    <span class="player-badge">玩家：{{ request.user.username }}</span>
+                {% else %}
+                    <a href="{% url 'login' %}">登入</a>
+                {% endif %}
+            </div>
+        </nav>
+
+        <section class="rules-hero">
+            <p class="eyebrow">Rulebook</p>
+            <h1>三國殺遊戲規則介紹</h1>
+            <p>這份規則整理成適合網頁遊戲使用的版本：先懂身份與勝利條件，再理解回合、手牌、距離與戰術。</p>
+        </section>
+
+        <section class="rules-grid">
+            <article class="rule-card" id="setup">
+                <span class="rule-number">01</span>
+                <h2>開局配置</h2>
+                <p>每位玩家抽一張身份牌。只有主公公開身份，忠臣、反賊、內奸都需要隱藏意圖，靠出牌風格讓其他人推測。</p>
+                <ul>
+                    <li>主公：公開身份，通常有額外體力上限。</li>
+                    <li>武將：武將牌決定技能與體力上限。</li>
+                    <li>體力：主公常見加成為上限 +1，例如 4 點變 5 點。</li>
+                </ul>
+            </article>
+
+            <article class="rule-card" id="turn">
+                <span class="rule-number">02</span>
+                <h2>回合流程</h2>
+                <ol>
+                    <li>準備階段：部分武將技能在此觸發。</li>
+                    <li>判定階段：處理樂不思蜀、兵糧寸斷等延時錦囊。</li>
+                    <li>摸牌階段：通常從牌堆摸 2 張牌。</li>
+                    <li>出牌階段：使用殺、錦囊、裝備與武將技能。</li>
+                    <li>棄牌階段：手牌數不可超過目前體力值。</li>
+                    <li>結束階段：部分技能或狀態在此結算。</li>
+                </ol>
+            </article>
+
+            <article class="rule-card" id="cards">
+                <span class="rule-number">03</span>
+                <h2>手牌與常見卡牌</h2>
+                <p>手牌是攻防資源。你需要在進攻、保命與棄牌上做取捨。</p>
+                <ul>
+                    <li>殺：主要攻擊牌，通常每回合限用一次。</li>
+                    <li>閃：被殺指定時，用來抵消傷害。</li>
+                    <li>桃：回復 1 點體力，也可在瀕死時救人。</li>
+                    <li>過河拆橋：棄掉對方一張牌。</li>
+                    <li>順手牽羊：距離為 1 時，拿走對方一張牌。</li>
+                </ul>
+            </article>
+
+            <article class="rule-card" id="distance">
+                <span class="rule-number">04</span>
+                <h2>距離與裝備</h2>
+                <p>沒有武器時，通常只能用殺攻擊距離 1 的玩家。武器與坐騎會改變你能打到誰，也會改變別人打不打得到你。</p>
+                <ul>
+                    <li>武器：增加攻擊範圍，有些武器還有特殊效果。</li>
+                    <li>防具：降低被攻擊或被錦囊影響的風險。</li>
+                    <li>坐騎：進攻馬縮短你到別人的距離，防禦馬增加別人到你的距離。</li>
+                </ul>
+            </article>
+
+            <article class="rule-card" id="win">
+                <span class="rule-number">05</span>
+                <h2>陣營與勝利條件</h2>
+                <ul>
+                    <li>主公與忠臣：消滅所有反賊與內奸。</li>
+                    <li>反賊：擊殺主公。</li>
+                    <li>內奸：先讓其他角色出局，最後與主公單挑並擊敗主公。</li>
+                </ul>
+                <p>資訊不對稱是核心樂趣。忠臣要保護主公但不能太像反賊，反賊要合力壓主公，內奸則要維持局勢平衡。</p>
+            </article>
+
+            <article class="rule-card" id="death">
+                <span class="rule-number">06</span>
+                <h2>瀕死、死亡與獎懲</h2>
+                <p>角色體力降到 0 或以下會進入瀕死狀態，從當前回合玩家開始依序詢問是否使用桃救援。</p>
+                <ul>
+                    <li>若體力被救回 1，角色繼續遊戲。</li>
+                    <li>若沒有人救援，角色死亡並公開身份。</li>
+                    <li>擊殺反賊通常可摸牌獎勵；主公誤殺忠臣會有懲罰。</li>
+                </ul>
+            </article>
+
+            <article class="rule-card wide-card" id="tactics">
+                <span class="rule-number">07</span>
+                <h2>進階戰術</h2>
+                <div class="tactic-list">
+                    <div><strong>賣血流</strong><span>曹操、郭嘉等武將受傷後能換取牌或技能收益，常用傷害換牌差。</span></div>
+                    <div><strong>爆發流</strong><span>張飛、黃月英等武將能在單回合連續出牌，適合抓住破綻一波帶走。</span></div>
+                    <div><strong>距離控制</strong><span>武器、坐騎與位置會決定攻擊目標，懂距離才能控制戰場節奏。</span></div>
+                    <div><strong>身份偽裝</strong><span>前期不要只看嘴上說法，要觀察誰在拆主公裝備、誰在保反賊血量。</span></div>
+                </div>
+            </article>
+        </section>
+    </main>
+    <script src="{% static 'js/game.js' %}"></script>
+</body>
+</html>

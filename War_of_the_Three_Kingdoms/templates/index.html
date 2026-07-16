@@ -1,0 +1,156 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>三國殺 | 遊戲大廳</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main class="lobby-shell">
+        <nav class="top-nav" aria-label="遊戲導覽列">
+            <a class="brand" href="{% url 'home' %}">
+                <span class="brand-seal">戰</span>
+                <span>
+                    <strong>三國殺</strong>
+                    <small>War of the Three Kingdoms</small>
+                </span>
+            </a>
+
+            <div class="nav-menu">
+                <div class="nav-item">
+                    <button type="button">大廳 <span>⌃</span></button>
+                    <div class="mega-menu compact">
+                        <a href="{% url 'home' %}#quick-match"><strong>快速配對</strong><span>立即加入一場標準對局。</span></a>
+                        <a href="{% url 'home' %}#rooms"><strong>房間列表</strong><span>查看等待玩家的房間。</span></a>
+                        <a href="{% url 'rules' %}"><strong>規則教學</strong><span>新手先看這裡，理解身份與回合。</span></a>
+                    </div>
+                </div>
+
+                <div class="nav-item">
+                    <button type="button">對戰 <span>⌄</span></button>
+                    <div class="mega-menu">
+                        <div class="menu-feature"><strong>經典身份局</strong><span>主公、忠臣、反賊、內奸，各自為陣。</span></div>
+                        <a href="{% url 'home' %}#quick-match"><strong>標準模式</strong><span>適合一般遊玩。</span></a>
+                        <a href="{% url 'home' %}#quick-match"><strong>新手模式</strong><span>降低規則複雜度。</span></a>
+                        <a href="{% url 'home' %}#rooms"><strong>自訂房間</strong><span>邀請朋友一起開局。</span></a>
+                    </div>
+                </div>
+
+                <div class="nav-item">
+                    <button type="button">武將 <span>⌄</span></button>
+                    <div class="mega-menu compact">
+                        <a href="{% url 'home' %}#generals"><strong>武將圖鑑</strong><span>查看魏蜀吳群武將。</span></a>
+                        <a href="{% url 'rules' %}#tactics"><strong>戰術流派</strong><span>賣血流、爆發流、距離控制。</span></a>
+                        <a href="{% url 'home' %}#generals"><strong>常用武將</strong><span>你的近期使用紀錄。</span></a>
+                    </div>
+                </div>
+
+                <div class="nav-item">
+                    <button type="button">牌庫 <span>⌄</span></button>
+                    <div class="mega-menu compact">
+                        <a href="{% url 'rules' %}#turn"><strong>出牌流程</strong><span>摸牌、出牌、棄牌的時機。</span></a>
+                        <a href="{% url 'rules' %}#cards"><strong>常見卡牌</strong><span>殺、閃、桃與錦囊牌。</span></a>
+                        <a href="{% url 'rules' %}#distance"><strong>距離與裝備</strong><span>武器、坐騎與攻擊範圍。</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-area">
+                {% if request.user.is_authenticated %}
+                    <span class="player-badge" title="{{ request.user.email }}">玩家：{{ request.user.username }}</span>
+                    <form class="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">登出</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">登入</a>
+                    <a href="{% url 'register' %}">註冊</a>
+                {% endif %}
+            </div>
+        </nav>
+
+        {% if messages %}
+            <div class="game-message" role="status" aria-live="polite">
+                {% for message in messages %}<span>{{ message }}</span>{% endfor %}
+            </div>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+            <section class="lobby-hero">
+                <div>
+                    <p class="eyebrow">Game Lobby</p>
+                    <h1>歡迎回來，{{ request.user.username }}</h1>
+                    <p>選擇模式、建立房間，或直接加入一場三國殺對局。</p>
+                </div>
+                <div class="player-card">
+                    <span>目前帳號</span>
+                    <strong>{{ request.user.username }}</strong>
+                    <small>{{ request.user.email|default:"尚未設定信箱" }}</small>
+                </div>
+            </section>
+
+            <section class="lobby-grid">
+                <article class="quick-panel" id="quick-match">
+                    <div>
+                        <p class="eyebrow">Quick Match</p>
+                        <h2>快速開始</h2>
+                        <p>系統會替你尋找缺人的標準身份局。</p>
+                    </div>
+                    <button id="startGameButton" type="button">開始配對</button>
+                    <p id="gameStatus">目前狀態：在大廳待命。</p>
+                </article>
+
+                <article class="stats-panel">
+                    <h2>玩家資料</h2>
+                    <div class="stat-list">
+                        <span><strong>1</strong> 等級</span>
+                        <span><strong>0</strong> 勝場</span>
+                        <span><strong>0</strong> 金幣</span>
+                    </div>
+                </article>
+
+                <article class="room-panel" id="rooms">
+                    <div class="section-head">
+                        <h2>房間列表</h2>
+                        <button type="button">建立房間</button>
+                    </div>
+                    <div class="room-list">
+                        <button type="button"><span>桃園結義 #001</span><small>2 / 5 玩家 · 標準模式</small></button>
+                        <button type="button"><span>赤壁夜戰 #014</span><small>4 / 8 玩家 · 自訂房</small></button>
+                        <button type="button"><span>洛陽新手場 #032</span><small>1 / 4 玩家 · 新手模式</small></button>
+                    </div>
+                </article>
+
+                <article class="library-panel" id="generals">
+                    <h2>推薦武將</h2>
+                    <div class="general-row"><span>劉備</span><span>曹操</span><span>孫權</span></div>
+                </article>
+
+                <article class="library-panel" id="cards">
+                    <h2>常用卡牌</h2>
+                    <div class="general-row"><span>殺</span><span>閃</span><span>桃</span></div>
+                </article>
+
+                <article class="library-panel" id="events">
+                    <h2>今日活動</h2>
+                    <p>完成一場對局可獲得 100 金幣。</p>
+                </article>
+            </section>
+        {% else %}
+            <section class="guest-panel">
+                <p class="eyebrow">Game Lobby</p>
+                <h1>登入後進入遊戲大廳</h1>
+                <p>建立帳號後，你的玩家名稱會顯示在大廳右上角，之後也能保存戰績與遊戲資料。</p>
+                <div class="guest-actions">
+                    <a href="{% url 'login' %}">登入</a>
+                    <a href="{% url 'register' %}">註冊新帳號</a>
+                </div>
+            </section>
+        {% endif %}
+    </main>
+
+    <script src="{% static 'js/game.js' %}"></script>
+</body>
+</html>
