@@ -9,6 +9,7 @@ class Card(models.Model):
         WU = 'Wu', '吳'
         IDENTITY = 'Identity', '身份'
         FUNCTION = 'Function', '功能牌'
+        EQUIPMENT = 'Equipment', '裝備牌'
 
     name = models.CharField(max_length=80)
     faction = models.CharField(max_length=16, choices=Faction.choices)
