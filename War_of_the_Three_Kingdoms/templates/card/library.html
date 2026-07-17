@@ -55,12 +55,17 @@
             <p class="eyebrow">Card Library</p>
             <h1>牌庫</h1>
             <p>目前收錄 {{ cards|length }} 張武將牌，可依勢力瀏覽。</p>
+            {% regroup cards by faction_label as faction_groups %}
+            <nav class="card-jump-nav" aria-label="牌庫分類快速導覽">
+                {% for faction in faction_groups %}
+                    <a href="#card-group-{{ faction.list.0.faction }}">{{ faction.grouper }}</a>
+                {% endfor %}
+            </nav>
         </section>
 
-        {% regroup cards by faction_label as faction_groups %}
         <section class="card-library">
             {% for faction in faction_groups %}
-                <div class="card-faction-group">
+                <div class="card-faction-group" id="card-group-{{ faction.list.0.faction }}">
                     <div class="section-head">
                         <h2>{{ faction.grouper }}</h2>
                         <span>{{ faction.list|length }} 張</span>

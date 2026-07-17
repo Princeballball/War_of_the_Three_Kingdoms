@@ -26,6 +26,10 @@ body {
     color: var(--text);
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 button,
 input,
 select {
@@ -537,6 +541,33 @@ h2 {
     line-height: 1.75;
 }
 
+.card-jump-nav {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.card-jump-nav a {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.card-jump-nav a:hover,
+.card-jump-nav a:focus-visible {
+    border-color: rgba(240, 180, 91, 0.62);
+    color: var(--accent-strong);
+}
+
 .card-library {
     margin-top: 18px;
     display: grid;
@@ -544,6 +575,7 @@ h2 {
 }
 
 .card-faction-group {
+    scroll-margin-top: 96px;
     padding: 20px;
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -842,6 +874,16 @@ h2 {
 
     .tactic-list {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card-jump-nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .card-jump-nav a {
+        flex: 0 0 auto;
     }
 }
 
