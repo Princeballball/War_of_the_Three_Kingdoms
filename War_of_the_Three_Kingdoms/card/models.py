@@ -7,9 +7,11 @@ class Card(models.Model):
         SHU = 'Shu', '蜀'
         WEI = 'Wei', '魏'
         WU = 'Wu', '吳'
+        IDENTITY = 'Identity', '身份'
+        FUNCTION = 'Function', '功能牌'
 
     name = models.CharField(max_length=80)
-    faction = models.CharField(max_length=12, choices=Faction.choices)
+    faction = models.CharField(max_length=16, choices=Faction.choices)
     health = models.PositiveSmallIntegerField(default=4)
     skills = models.JSONField(default=list, blank=True)
     image_path = models.CharField(max_length=255, unique=True)

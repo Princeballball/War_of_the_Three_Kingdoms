@@ -75,7 +75,11 @@
                                 <div class="card-hover-panel">
                                     <div class="card-hover-head">
                                         <strong>{{ card.name }}</strong>
-                                        <span>{{ card.faction_label }} · 體力 {{ card.health }}</span>
+                                        {% if card.health %}
+                                            <span>{{ card.faction_label }} · 體力 {{ card.health }}</span>
+                                        {% else %}
+                                            <span>{{ card.faction_label }}牌</span>
+                                        {% endif %}
                                     </div>
                                     <div class="skill-list">
                                         {% for skill in card.skills %}
@@ -84,7 +88,13 @@
                                                 <p>{{ skill.description }}</p>
                                             </section>
                                         {% empty %}
-                                            <p>尚未登錄技能說明。</p>
+                                            {% if card.faction == "Identity" %}
+                                                <p>身份牌會在開局時分配給玩家，用來決定本局陣營與勝利目標。</p>
+                                            {% elif card.faction == "Function" %}
+                                                <p>功能牌可在對局中使用，依牌面效果影響角色、手牌或場上狀態。</p>
+                                            {% else %}
+                                                <p>尚未登錄技能說明。</p>
+                                            {% endif %}
                                         {% endfor %}
                                     </div>
                                 </div>
