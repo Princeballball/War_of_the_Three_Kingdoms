@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'account',
     'card',
     'room',
+    'game',
 ]
 
 MIDDLEWARE = [

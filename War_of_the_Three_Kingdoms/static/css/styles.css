@@ -220,6 +220,7 @@ a {
 
 .lobby-hero,
 .room-hero,
+.game-hero,
 .guest-panel,
 .quick-panel,
 .stats-panel,
@@ -246,6 +247,270 @@ a {
     justify-content: space-between;
     gap: 18px;
     padding: 28px;
+}
+
+.game-hero {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px;
+}
+
+.game-hero h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+}
+
+.game-hero p:last-child {
+    max-width: 720px;
+    margin: 12px 0 0;
+    color: var(--muted);
+    line-height: 1.75;
+}
+
+.game-hero p strong {
+    color: var(--accent-strong);
+}
+
+.identity-card-panel {
+    width: min(220px, 100%);
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.identity-card-panel img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    display: block;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.identity-card-panel strong {
+    color: var(--accent-strong);
+    font-size: 1.25rem;
+}
+
+.general-select-panel {
+    margin-top: 18px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(29, 23, 20, 0.78);
+}
+
+.turn-panel,
+.hand-panel {
+    margin-top: 18px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(29, 23, 20, 0.78);
+}
+
+.turn-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.turn-panel h2,
+.turn-panel p {
+    margin: 0;
+}
+
+.turn-panel p:last-child {
+    margin-top: 8px;
+    color: var(--muted);
+}
+
+.turn-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.turn-actions form {
+    margin: 0;
+}
+
+.turn-actions button {
+    min-height: 44px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff8ec;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.turn-actions button:hover {
+    background: #b62d26;
+}
+
+.turn-actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.48;
+}
+
+.general-choice-grid {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.general-choice-grid form {
+    margin: 0;
+}
+
+.general-choice-card {
+    width: 100%;
+    overflow: hidden;
+    display: grid;
+    gap: 8px;
+    padding: 0 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.general-choice-card:hover,
+.general-choice-card:focus-visible {
+    border-color: rgba(240, 180, 91, 0.72);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
+    transform: translateY(-3px);
+}
+
+.general-choice-card img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    display: block;
+    object-fit: cover;
+    background: var(--panel-strong);
+}
+
+.general-choice-card strong,
+.general-choice-card small {
+    margin: 0 12px;
+}
+
+.general-choice-card strong {
+    overflow: hidden;
+    font-size: 1.2rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.general-choice-card small {
+    color: var(--muted);
+}
+
+.hand-card-grid {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.hand-card {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.hand-card img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    display: block;
+    object-fit: cover;
+    background: var(--panel-strong);
+}
+
+.hand-card strong,
+.hand-card small {
+    display: block;
+    margin: 0 10px;
+}
+
+.hand-card strong {
+    margin-top: 10px;
+    overflow: hidden;
+    color: var(--text);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hand-card small {
+    margin-bottom: 10px;
+    color: var(--muted);
+}
+
+.hand-card form {
+    display: grid;
+    gap: 8px;
+    margin: 10px;
+}
+
+.hand-card select,
+.hand-card button {
+    min-height: 36px;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.hand-card select {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+}
+
+.hand-card select option {
+    color: #1d1714;
+}
+
+.hand-card button {
+    border: 0;
+    background: var(--accent);
+    color: #fff8ec;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.hand-card button:hover {
+    background: #b62d26;
+}
+
+.equipment-row {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.equipment-row span {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--accent-strong);
+    font-weight: 800;
 }
 
 .room-hero p:last-child {
@@ -473,6 +738,54 @@ h2 {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 14px;
+}
+
+.game-table {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.game-player-card {
+    min-height: 170px;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 8px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.game-player-card.self {
+    border-color: rgba(240, 180, 91, 0.62);
+    background: rgba(240, 180, 91, 0.1);
+}
+
+.game-player-card span,
+.game-player-card small {
+    color: var(--muted);
+}
+
+.game-player-card strong {
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--text);
+    font-size: 1.25rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.game-player-card em {
+    padding: 5px 9px;
+    border-radius: 8px;
+    background: rgba(207, 52, 44, 0.2);
+    color: var(--accent-strong);
+    font-style: normal;
+    font-weight: 800;
 }
 
 .seat-card {
@@ -856,6 +1169,29 @@ h2 {
         flex-direction: column;
     }
 
+    .game-hero {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .turn-panel {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .turn-actions {
+        flex-direction: column;
+    }
+
+    .turn-actions button {
+        width: 100%;
+    }
+
+    .identity-card-panel {
+        width: 100%;
+        max-width: 260px;
+    }
+
     .player-card {
         width: 100%;
     }
@@ -870,6 +1206,16 @@ h2 {
 
     .seat-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .game-table {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .general-choice-grid {
+        grid-template-columns: repeat(3, minmax(150px, 1fr));
+        overflow-x: auto;
+        padding-bottom: 4px;
     }
 
     .tactic-list {
@@ -925,7 +1271,9 @@ h2 {
     .stat-list,
     .general-row,
     .tactic-list,
-    .seat-grid {
+    .seat-grid,
+    .game-table,
+    .general-choice-grid {
         grid-template-columns: 1fr;
     }
 

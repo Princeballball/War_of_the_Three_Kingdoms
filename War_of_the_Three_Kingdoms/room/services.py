@@ -20,6 +20,9 @@ def join_room(room, user):
             room.status = Room.Status.PLAYING
             room.started_at = timezone.now()
             room.save(update_fields=['status', 'started_at'])
+            from game.services import create_game_from_room
+
+            create_game_from_room(room)
             return room, True, '房間已湊齊 5 人，自動開局。'
 
         return room, True, f'已加入房間，目前 {room.memberships.count()} / {room.max_players} 人。'

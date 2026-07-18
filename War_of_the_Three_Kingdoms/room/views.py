@@ -9,6 +9,16 @@ from .models import Room
 from .services import join_auto_room, join_room, leave_room
 
 
+def redirect_to_game_if_started(room):
+    if room.status == Room.Status.PLAYING:
+        from game.models import Game
+
+        game = Game.objects.filter(room=room).first()
+        if game:
+            return redirect('game:detail', game_id=game.id)
+    return None
+
+
 def home_view(request):
     public_rooms = (
         Room.objects
@@ -48,9 +58,12 @@ def create_room_view(request):
 @require_POST
 def join_public_room_view(request, room_id):
     room = get_object_or_404(Room, pk=room_id, room_type=Room.RoomType.PUBLIC)
-    _, success, message = join_room(room, request.user)
+    room, success, message = join_room(room, request.user)
     if success:
         messages.success(request, message)
+        game_redirect = redirect_to_game_if_started(room)
+        if game_redirect:
+            return game_redirect
         return redirect('room:detail', code=room.code)
     else:
         messages.error(request, message)
@@ -70,9 +83,12 @@ def join_private_room_view(request):
         messages.error(request, '找不到這個私人房號。')
         return redirect('home')
 
-    _, success, message = join_room(room, request.user)
+    room, success, message = join_room(room, request.user)
     if success:
         messages.success(request, message)
+        game_redirect = redirect_to_game_if_started(room)
+        if game_redirect:
+            return game_redirect
         return redirect('room:detail', code=room.code)
     else:
         messages.error(request, message)
@@ -85,6 +101,9 @@ def auto_match_view(request):
     room, success, message = join_auto_room(request.user)
     if success:
         messages.success(request, message)
+        game_redirect = redirect_to_game_if_started(room)
+        if game_redirect:
+            return game_redirect
         return redirect('room:detail', code=room.code)
     else:
         messages.error(request, message)
@@ -99,6 +118,10 @@ def detail_view(request, code):
     )
     if not room.memberships.filter(user=request.user).exists():
         raise Http404('你不在這個房間裡。')
+
+    game_redirect = redirect_to_game_if_started(room)
+    if game_redirect:
+        return game_redirect
 
     memberships = list(room.memberships.all())
     seats = memberships + [None] * (room.max_players - len(memberships))

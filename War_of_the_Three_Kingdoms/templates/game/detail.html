@@ -1,0 +1,217 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>三國殺 | 遊戲準備</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <main class="lobby-shell">
+        <nav class="top-nav" aria-label="遊戲導覽列">
+            <a class="brand" href="{% url 'home' %}">
+                <span class="brand-seal">戰</span>
+                <span>
+                    <strong>三國殺</strong>
+                    <small>War of the Three Kingdoms</small>
+                </span>
+            </a>
+            <div class="account-area">
+                <span class="player-badge">玩家：{{ request.user.username }}</span>
+                <a href="{% url 'home' %}">回大廳</a>
+            </div>
+        </nav>
+
+        {% if messages %}
+            <div class="game-message" role="status" aria-live="polite">
+                {% for message in messages %}<span>{{ message }}</span>{% endfor %}
+            </div>
+        {% endif %}
+
+        <section class="game-hero">
+            <div>
+                <p class="eyebrow">{{ game.get_status_display }} · 房號 {{ game.room.code }}</p>
+                <h1>{{ game.room.name }}</h1>
+                {% if current_player.selected_general %}
+                    <p>你的身份是 <strong>{{ current_player.identity_card.name }}</strong>，武將是 <strong>{{ current_player.selected_general.name }}</strong>。</p>
+                {% else %}
+                    <p>你的身份是 <strong>{{ current_player.identity_card.name }}</strong>。請從下方 3 張候選武將中選擇 1 張。</p>
+                {% endif %}
+            </div>
+            <div class="identity-card-panel">
+                {% if current_player.identity_card %}
+                    <img src="{% static current_player.identity_card.image_path %}" alt="{{ current_player.identity_card.name }}">
+                {% endif %}
+                <strong>{{ current_player.identity_card.name }}</strong>
+            </div>
+        </section>
+
+        {% if game.status == "playing" %}
+            <section class="turn-panel">
+                <div>
+                    <p class="eyebrow">Turn {{ game.turn_number }} · {{ game.get_phase_display }}</p>
+                    <h2>目前輪到：{{ game.current_turn.username }}</h2>
+                    <p>牌堆 {{ deck_count }} 張 · 棄牌堆 {{ discard_count }} 張 · 本回合殺 {{ game.slash_count }} / 1</p>
+                </div>
+                {% if game.current_turn_id == request.user.id %}
+                    <div class="turn-actions">
+                        <form method="post" action="{% url 'game:draw_cards' game.id %}">
+                            {% csrf_token %}
+                            <button type="submit" {% if game.has_drawn %}disabled{% endif %}>摸 2 張</button>
+                        </form>
+                        <form method="post" action="{% url 'game:end_turn' game.id %}">
+                            {% csrf_token %}
+                            <button type="submit">結束回合</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </section>
+        {% endif %}
+
+        {% if pending_action %}
+            <section class="turn-panel pending-panel">
+                <div>
+                    <p class="eyebrow">Response</p>
+                    <h2>待回應事件</h2>
+                    <p>{{ pending_action.message }}</p>
+                </div>
+                <div class="turn-actions">
+                    {% if pending_action.type == "slash_response" and pending_action.target_id == current_player.id %}
+                        <form method="post" action="{% url 'game:respond' game.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="response" value="dodge">
+                            <button type="submit" {% if not has_dodge %}disabled{% endif %}>打出閃</button>
+                        </form>
+                        <form method="post" action="{% url 'game:respond' game.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="response" value="pass">
+                            <button type="submit">不出閃</button>
+                        </form>
+                    {% elif pending_action.type == "dying" %}
+                        <form method="post" action="{% url 'game:respond' game.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="response" value="peach">
+                            <button type="submit" {% if not has_peach %}disabled{% endif %}>使用桃</button>
+                        </form>
+                        <form method="post" action="{% url 'game:respond' game.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="response" value="pass">
+                            <button type="submit">無人救援，結算死亡</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </section>
+        {% endif %}
+
+        {% if not current_player.selected_general %}
+            <section class="general-select-panel">
+                <div class="section-head">
+                    <h2>選擇武將</h2>
+                    <span>選 1 張</span>
+                </div>
+                <div class="general-choice-grid">
+                    {% for general in current_player.general_candidates.all %}
+                        <form method="post" action="{% url 'game:choose_general' game.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="general_id" value="{{ general.id }}">
+                            <button type="submit" class="general-choice-card">
+                                <img src="{% static general.image_path %}" alt="{{ general.name }}">
+                                <strong>{{ general.name }}</strong>
+                                <small>{{ general.faction_label }} · 體力 {{ general.health }}</small>
+                            </button>
+                        </form>
+                    {% empty %}
+                        <p class="empty-state">尚未產生武將候選。</p>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        <section class="game-table" aria-label="玩家座位">
+            {% for player in players %}
+                <article class="game-player-card{% if player.user == request.user %} self{% endif %}">
+                    <span>座位 {{ player.seat_order }}</span>
+                    <strong>{{ player.user.username }}</strong>
+                    {% if player.selected_general %}
+                        <small>{{ player.selected_general.name }} · 體力 {{ player.current_health }} / {{ player.max_health }}</small>
+                    {% else %}
+                        <small>尚未選擇武將</small>
+                    {% endif %}
+                    {% if player.user == request.user %}
+                        <small>{{ player.identity_card.name }}</small>
+                    {% else %}
+                        <small>身份保密</small>
+                    {% endif %}
+                    {% if game.current_turn_id == player.user_id %}
+                        <em>目前先手</em>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </section>
+
+        {% if current_player.selected_general %}
+            <section class="hand-panel">
+                <div class="section-head">
+                    <h2>你的手牌</h2>
+                    <span>{{ hand_cards|length }} 張</span>
+                </div>
+                <div class="hand-card-grid">
+                    {% for game_card in hand_cards %}
+                        <article class="hand-card">
+                            <img src="{% static game_card.card.image_path %}" alt="{{ game_card.card.name }}">
+                            <strong>{{ game_card.card.name }}</strong>
+                            <small>{{ game_card.card.faction_label }}</small>
+                            {% if game.current_turn_id == request.user.id and game.status == "playing" %}
+                                <form method="post" action="{% url 'game:use_card' game.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="game_card_id" value="{{ game_card.id }}">
+                                    {% if game_card.card.name == "殺" or game_card.card.name == "決鬥" or game_card.card.name == "過河拆橋" or game_card.card.name == "順手牽羊" or game_card.card.name == "樂不思蜀" %}
+                                        <select name="target_player_id" required>
+                                            <option value="">選擇目標</option>
+                                            {% for target in target_players %}
+                                                <option value="{{ target.id }}">{{ target.user.username }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    {% endif %}
+                                    <button type="submit">使用</button>
+                                </form>
+                            {% endif %}
+                        </article>
+                    {% empty %}
+                        <p class="empty-state">目前沒有手牌。</p>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="hand-panel">
+                <div class="section-head">
+                    <h2>你的裝備區</h2>
+                    <span>{{ equipment_cards|length }} 張</span>
+                </div>
+                <div class="equipment-row">
+                    {% for game_card in equipment_cards %}
+                        <span>{{ game_card.get_equipment_slot_display }}：{{ game_card.card.name }}</span>
+                    {% empty %}
+                        <p class="empty-state">目前沒有裝備。</p>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="hand-panel">
+                <div class="section-head">
+                    <h2>你的判定區</h2>
+                    <span>{{ judgment_cards|length }} 張</span>
+                </div>
+                <div class="equipment-row">
+                    {% for game_card in judgment_cards %}
+                        <span>{{ game_card.card.name }}</span>
+                    {% empty %}
+                        <p class="empty-state">目前沒有延時錦囊。</p>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+    </main>
+</body>
+</html>

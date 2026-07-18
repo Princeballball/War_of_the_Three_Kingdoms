@@ -83,7 +83,7 @@
                                         {% if card.health %}
                                             <span>{{ card.faction_label }} · 體力 {{ card.health }}</span>
                                         {% else %}
-                                            <span>{{ card.faction_label }}牌</span>
+                                            <span>{{ card.faction_label }}{% if card.deck_count > 1 %} · 牌堆 {{ card.deck_count }} 張{% endif %}</span>
                                         {% endif %}
                                     </div>
                                     <div class="skill-list">
@@ -95,6 +95,8 @@
                                         {% empty %}
                                             {% if card.faction == "Identity" %}
                                                 <p>身份牌會在開局時分配給玩家，用來決定本局陣營與勝利目標。</p>
+                                            {% elif card.faction == "Basic" %}
+                                                <p>基本牌是回合中最常使用的牌，包含攻擊、防禦與回復。</p>
                                             {% elif card.faction == "Function" %}
                                                 <p>功能牌可在對局中使用，依牌面效果影響角色、手牌或場上狀態。</p>
                                             {% elif card.faction == "Equipment" %}

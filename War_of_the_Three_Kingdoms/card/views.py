@@ -12,13 +12,14 @@ class CardLibraryView(ListView):
     def get_queryset(self):
         faction_order = Case(
             When(faction=Card.Faction.IDENTITY, then=Value(0)),
-            When(faction=Card.Faction.FUNCTION, then=Value(1)),
-            When(faction=Card.Faction.EQUIPMENT, then=Value(2)),
-            When(faction=Card.Faction.WEI, then=Value(3)),
-            When(faction=Card.Faction.SHU, then=Value(4)),
-            When(faction=Card.Faction.WU, then=Value(5)),
-            When(faction=Card.Faction.CHUN, then=Value(6)),
-            default=Value(7),
+            When(faction=Card.Faction.BASIC, then=Value(1)),
+            When(faction=Card.Faction.FUNCTION, then=Value(2)),
+            When(faction=Card.Faction.EQUIPMENT, then=Value(3)),
+            When(faction=Card.Faction.WEI, then=Value(4)),
+            When(faction=Card.Faction.SHU, then=Value(5)),
+            When(faction=Card.Faction.WU, then=Value(6)),
+            When(faction=Card.Faction.CHUN, then=Value(7)),
+            default=Value(8),
             output_field=IntegerField(),
         )
         return Card.objects.annotate(faction_order=faction_order).order_by('faction_order', 'name')
